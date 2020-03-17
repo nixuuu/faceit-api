@@ -63,7 +63,7 @@ export class FaceitAPI {
         return this.request<Match>(url);
     }
 
-    public static playerHubs(playerId: string, options?: {offset: number; limit: number;}) {
+    public static playerHubs(playerId: string, options?: {offset?: number; limit?: number;}) {
         const url = `/players/${playerId}/hubs` + HttpHelper.createQueryString(options);
         return this.request<PlayerHub>(url);
     }
