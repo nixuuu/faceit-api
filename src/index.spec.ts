@@ -1,7 +1,7 @@
 import {expect} from 'chai';
-import {FaceitAPI} from "./index";
 import {GameId, Region} from "./models/models";
 import {MissingParameter} from "./errors/missing-parameter";
+import {FaceitAPI} from "./classes/faceit-api";
 
 const strictGame = process.env.TEST_GAME as GameId;
 const strictRegion = process.env.TEST_REGION as Region;
