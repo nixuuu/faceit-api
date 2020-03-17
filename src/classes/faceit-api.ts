@@ -68,6 +68,11 @@ export class FaceitAPI {
         return this.request<PlayerHub>(url);
     }
 
+    public static playerTournaments(playerId: string, options?: {offset?: number; limit?: number}) {
+        const url = `/players/${playerId}/tournaments` + HttpHelper.createQueryString(options);
+        return this.request<Tournament>(url);
+    }
+
     public static rankings(gameId: GameId, region: Region, options?: {
         playerId?: string;
         limit?: number;

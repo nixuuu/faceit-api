@@ -137,6 +137,14 @@ describe("FaceitAPI", () => {
                 .catch(done);
 
         })
+        it(`should get tournaments of player ${testPlayerId}`, (done) => {
+            FaceitAPI.playerTournaments(testPlayerId)
+                .then(tournaments => {
+                    checkArrayResponse(tournaments);
+                    done();
+                })
+                .catch(done);
+        });
     });
 
     describe("Games", () => {
