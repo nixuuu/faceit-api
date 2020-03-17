@@ -1,3 +1,5 @@
+import {config} from 'dotenv';
+config();
 import {expect} from 'chai';
 import {GameId, Region} from "./models/models";
 import {MissingParameter} from "./errors/missing-parameter";
