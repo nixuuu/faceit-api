@@ -145,6 +145,16 @@ describe("FaceitAPI", () => {
                 })
                 .catch(done);
         });
+        it(`should get player ${testPlayerId} stats for game ${strictGame}`, (done) => {
+            FaceitAPI.playerGameStats(testPlayerId, strictGame)
+                .then(stats => {
+                    expect(stats).to.be.an('object');
+                    expect(stats.game_id).to.be.eq(strictGame);
+                    expect(stats.player_id).to.be.eq(testPlayerId);
+                    done();
+                })
+                .catch(done);
+        })
     });
 
     describe("Games", () => {

@@ -586,3 +586,14 @@ export interface ArrayResponse<T> {
     start: number;
     end: number;
 }
+
+export type SearchType = 'championships'|'hubs'|'players'|'organizers'|'teams'|'tournaments';
+
+export interface ChampionshipSearchOptions extends SearchOptions {
+    name?: string
+}
+
+export interface SearchOptions {
+    limit?: number;
+    offset?: number;
+}
