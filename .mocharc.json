@@ -1,0 +1,8 @@
+{
+  "diff": true,
+  "package": "./package.json",
+  "timeout": 20000,
+  "slow": 75,
+  "all": true,
+  "ui": "bdd"
+}
