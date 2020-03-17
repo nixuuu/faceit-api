@@ -2,8 +2,10 @@
   "compilerOptions": {
     "module": "commonjs",
     "target": "es5",
-    "sourceMap": true,
-    "outDir": "dist"
+    "sourceMap": false,
+    "outDir": "dist",
+    "declaration": true,
+    "moduleResolution": "node"
   },
   "include": ["src"],
   "exclude": [
