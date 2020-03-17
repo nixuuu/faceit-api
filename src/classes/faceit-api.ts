@@ -1,5 +1,5 @@
 import {RequestOptions} from "http";
-import {GameData, GameId, Games, Hub, Match, Player, PlayerHub, Rankings, Region} from "..";
+import {GameData, GameId, Games, Hub, Match, Player, PlayerHub, Rankings, Region, Tournament} from "..";
 import {MissingParameter} from "..";
 import {HttpHelper} from "..";
 import {defaultsDeep} from "lodash";
