@@ -18,7 +18,7 @@ export class HttpHelper {
         options = defaultsDeep(options, {json: true});
         return new Promise<T>((resolve, reject) => {
             const req = (url.protocol === 'http:' ? requestHttp : requestHttps)(url, options, (res) => {
-                if (res.statusCode >= 400 && res.statusCode !== 500) {
+                if (res.statusCode >= 400) {
                     reject(new Error(`statusCode=${res.statusCode}`));
                     return;
                 }
