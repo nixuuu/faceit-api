@@ -1,8 +1,4 @@
-export interface HubMatches {
-    items: HubMatchesItem[];
-    start: number;
-    end:   number;
-}
+export interface HubMatches extends ArrayResponse<HubMatchesItem> { }
 
 export interface HubMatchesItem {
     match_id:         string;
@@ -338,11 +334,8 @@ export interface TeamStats {
     "Overtime score":    string;
 }
 
-export interface Rankings {
+export interface Rankings extends ArrayResponse<RankingPlayerPositionItem> {
     position?: number;
-    items:     RankingPlayerPositionItem[];
-    start:     number;
-    end:       number;
 }
 
 export interface RankingPlayerPositionItem {
@@ -354,11 +347,7 @@ export interface RankingPlayerPositionItem {
     game_skill_level: number;
 }
 
-export interface Tournament {
-    items: TournamentsItem[];
-    start: number;
-    end:   number;
-}
+export interface Tournament extends ArrayResponse<TournamentsItem> { }
 
 export interface TournamentsItem {
     tournament_id:                  string;
@@ -401,10 +390,7 @@ export enum FluffyStatus {
     Paid = "paid",
 }
 
-export interface Match {
-    items: MatchItem[];
-    start: number;
-    end:   number;
+export interface Match extends ArrayResponse<MatchItem> {
     from:  number;
     to:    number;
 }
@@ -453,11 +439,7 @@ export interface FactionPlayer {
     faceit_url:       string;
 }
 
-export interface PlayerHub {
-    items: PlayerHubItem[];
-    start: number;
-    end:   number;
-}
+export interface PlayerHub extends ArrayResponse<PlayerHubItem> { }
 
 export interface PlayerHubItem {
     hub_id:       string;
@@ -597,8 +579,10 @@ export interface Settings {
     language: string;
 }
 
-export interface Games {
-    items: GameData[];
+export interface Games extends ArrayResponse<GameData> { }
+
+export interface ArrayResponse<T> {
+    items: T[];
     start: number;
-    end:   number;
+    end: number;
 }

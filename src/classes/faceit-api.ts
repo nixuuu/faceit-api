@@ -1,5 +1,5 @@
 import {RequestOptions} from "http";
-import {GameData, GameId, Games, Match, Player, Rankings, Region} from "..";
+import {GameData, GameId, Games, Hub, Match, Player, PlayerHub, Rankings, Region} from "..";
 import {MissingParameter} from "..";
 import {HttpHelper} from "..";
 import {defaultsDeep} from "lodash";
@@ -63,6 +63,11 @@ export class FaceitAPI {
         return this.request<Match>(url);
     }
 
+    public static playerHubs(playerId: string, options?: {offset: number; limit: number;}) {
+        const url = `/players/${playerId}/hubs` + HttpHelper.createQueryString(options);
+        return this.request<PlayerHub>(url);
+    }
+
     public static rankings(gameId: GameId, region: Region, options?: {
         playerId?: string;
         limit?: number;
@@ -71,7 +76,7 @@ export class FaceitAPI {
     }) {
         options = defaultsDeep(options, {limit: 20, offset: 0});
         if (options.page) {
-            options.offset = options.limit * options.page;
+            options.offset = options.limit * (options.page - 1);
             delete options.page;
         }
         let url: string | URL = `/rankings/games/${gameId}/regions/${region}`;

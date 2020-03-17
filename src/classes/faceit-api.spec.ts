@@ -1,9 +1,9 @@
 import {config} from 'dotenv';
 config();
 import {expect} from 'chai';
-import {GameId, Region} from "./models/models";
-import {MissingParameter} from "./errors/missing-parameter";
-import {FaceitAPI} from "./classes/faceit-api";
+import {ArrayResponse, GameId, Region} from "../models/models";
+import {MissingParameter} from "../errors/missing-parameter";
+import {FaceitAPI} from "./faceit-api";
 
 const strictGame = process.env.TEST_GAME as GameId;
 const strictRegion = process.env.TEST_REGION as Region;
@@ -13,7 +13,7 @@ const testPlayerId = process.env.TEST_PLAYER_ID as string;
 const testPlayerNickname = process.env.TEST_PLAYER_NICKNAME as string;
 const playerCases = [undefined];
 const limitCases = [20, 100];
-const pageCases = [0, 20];
+const pageCases = [1, 2];
 if (testPlayerId) playerCases.push(testPlayerId);
 
 describe("FaceitAPI", () => {
@@ -37,16 +37,12 @@ describe("FaceitAPI", () => {
                                 expect(request).to.be.a('promise');
                                 request
                                     .then(ranking => {
-                                        expect(ranking).to.be.a('object', 'is object');
-                                        expect(ranking.start).not.eq(undefined, 'start exists');
-                                        expect(ranking.end).not.eq(undefined, 'end exists');
-                                        expect(ranking.items).not.eq(undefined, 'items exists');
                                         if (playerId) {
+                                            checkArrayResponse(ranking);
                                             expect(ranking.position).not.eq(undefined, 'player position exists');
                                         } else {
-                                            expect(ranking.start).to.be.eq(page * limit, 'page working');
+                                            checkArrayResponse(ranking, limit, (page - 1) * limit);
                                         }
-                                        expect(ranking.items).to.lengthOf.lessThan(limit + 1, 'has good items length');
                                         done();
                                     })
                                     .catch(done);
@@ -109,11 +105,7 @@ describe("FaceitAPI", () => {
         it(`should get match history for player ${testPlayerId}`, (done) => {
             FaceitAPI.playerMatchHistory(testPlayerId, strictGame)
                 .then(history => {
-                    expect(history).to.be.an('object');
-                    expect(history.items).to.not.eq(undefined);
-                    expect(history.start).to.not.eq(undefined);
-                    expect(history.end).to.not.eq(undefined);
-                    expect(history.items).to.lengthOf.least(0);
+                    checkArrayResponse(history);
                     done();
                 })
                 .catch(done);
@@ -123,22 +115,35 @@ describe("FaceitAPI", () => {
                 limit: 10,
                 offset: 10
             }).then(history => {
-                expect(history).to.be.an('object');
-                expect(history.start).to.be.eq(10);
-                expect(history.end).to.be.eq(history.start + 10);
+                checkArrayResponse(history, 10, 10);
                 done();
             })
         });
+
+        it(`should get hubs of player ${testPlayerId}`, (done) => {
+            FaceitAPI.playerHubs(testPlayerId)
+                .then(response => {
+                    checkArrayResponse(response);
+                    done();
+                })
+                .catch(done);
+        });
+        it(`should get hubs of player ${testPlayerId} with offset 1`, (done) => {
+            FaceitAPI.playerHubs(testPlayerId, {limit: 1, offset: 1})
+                .then(response => {
+                    checkArrayResponse(response, 1, 1);
+                    done();
+                })
+                .catch(done);
+
+        })
     });
 
     describe("Games", () => {
         it('should get all games', (done) => {
             FaceitAPI.games()
                 .then(games => {
-                    expect(games).to.be.an('object', 'is object');
-                    expect(games.items).to.lengthOf.least(0);
-                    expect(games.start).to.not.eq(undefined);
-                    expect(games.end).to.not.eq(undefined);
+                    checkArrayResponse(games);
                     done();
                 })
                 .catch(done);
@@ -153,3 +158,19 @@ describe("FaceitAPI", () => {
         });
     });
 });
+
+function checkArrayResponse<T>(response: ArrayResponse<T>, limit?: number, offset?: number) {
+    expect(response).to.be.an('object');
+    expect(response.start).to.not.be.eq(undefined);
+    expect(response.end).to.not.be.eq(undefined);
+    expect(response.items).to.not.be.eq(undefined);
+
+    if (typeof limit === 'number') {
+        expect(response.items).to.lengthOf.lessThan(limit + 1);
+        expect(response.end).to.be.lessThan(response.start + limit + 1);
+    }
+
+    if (typeof offset === 'number') {
+        expect(response.start).to.be.closeTo(offset, 1);
+    }
+}
